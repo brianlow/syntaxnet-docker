@@ -8,7 +8,7 @@ Usage
 -----
 
 ```shell
-echo "Name this boat" | docker run --rm -i syntaxnet
+echo "Name this boat" | docker run --rm -i brianlow/syntaxnet
 ...
 Input: Name this boat
 Parse:
