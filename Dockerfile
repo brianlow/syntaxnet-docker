@@ -1,50 +1,32 @@
-FROM ubuntu:14.04
+FROM ubuntu:15.10
 
 MAINTAINER Brian Low <brian.low22@gmail.com>
 
 RUN apt-get update && apt-get install -y \
         build-essential \
         curl \
+        g++ \
         git \
         libfreetype6-dev \
         libpng12-dev \
         libzmq3-dev \
+        openjdk-8-jdk \
         pkg-config \
         python-dev \
         python-numpy \
         python-pip \
         software-properties-common \
         swig \
+        unzip \
         zip \
         zlib1g-dev \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -fSsL -O https://bootstrap.pypa.io/get-pip.py && \
-    python get-pip.py && \
-    rm get-pip.py
-
-RUN pip --no-cache-dir install \
-        ipykernel \
-        jupyter \
-        matplotlib \
-        && \
-    python -m ipykernel.kernelspec
+RUN update-ca-certificates -f
 
 # Set up Bazel.
-
-# We need to add a custom PPA to pick up JDK8, since trusty doesn't
-# have an openjdk8 backport.  openjdk-r is maintained by a reliable contributor:
-# Matthias Klose (https://launchpad.net/~doko).  It will do until
-# we either update the base image beyond 14.04 or openjdk-8 is
-# finally backported to trusty; see e.g.
-#   https://bugs.launchpad.net/trusty-backports/+bug/1368094
-RUN add-apt-repository -y ppa:openjdk-r/ppa && \
-    apt-get update && \
-    apt-get install -y openjdk-8-jdk openjdk-8-jre-headless && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
 
 # Running bazel inside a `docker build` command causes trouble, cf:
 #   https://github.com/bazelbuild/bazel/issues/134
